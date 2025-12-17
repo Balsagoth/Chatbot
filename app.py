@@ -65,7 +65,7 @@ if "messages" not in st.session_state:
 # Configuramos el modelo de Gemini
 if "chat_session" not in st.session_state:
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash", # Modelo rápido y eficiente
+        model_name="gemini-1.5-flash-latest", # Modelo rápido y eficiente
         system_instruction=SYSTEM_PROMPT
     )
     st.session_state.chat_session = model.start_chat(history=[])
@@ -107,3 +107,4 @@ if prompt := st.chat_input("Escribe tu duda o pega tu código aquí..."):
         
     except Exception as e:
         st.error(f"Hubo un error de conexión: {e}")
+
