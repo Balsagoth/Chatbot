@@ -1,0 +1,812 @@
+
+
+--- INICIO DEL DOCUMENTO: 2425 - 3ESO - Basic Python IV - Loops II.docx ---
+Basic Python IV: Loops II
+
+
+The while loop
+
+We have already learned how to use a for loop. We use it when a program must repeat an action a certain number of times. But we still need another kind of loop that lets us repeat an action indefinitely, a number of times that we don't know yet.
+
+The while loop was created for this purpose. It will repeat a particular action or series of actions an indefinite number of times, until a certain condition is met. This quality makes it a much more flexible type of loop than the for loop, since we can make our code repeat a series of instructions without having to be precise about the number of times we need them to be executed.
+
+But with the while loop we can also perform the same function as the for loop, which makes it more versatile. If, for example, we want to display the numbers from 1 to 10 with a for, we already know how to do that:
+
+
+
+Well, we can do exactly the same with a while, only in this case it is a little longer, and that is why the for is used in these situations:
+
+
+
+Main differences between the while and for loops when we use a counter (i):
+
+In the while loop we need to create and initialize the counter (i).
+Instead of using the function range(), in the while we set a condition.
+At the end of the while we need to increase the counter.
+
+So the reason we use for instead of while when we need a counter is that for is shorter and more precise (we can do the same with fewer lines). The for takes care of counter creation and incrementing.
+
+
+
+
+
+
+And the best situation in which we can use a while is repeating something until a certain condition is met. For example, at the end of every program we might want to give the user the possibility to either play again or stop playing, and we could do it like this:
+
+
+
+
+
+
+
+So the program doesn't stop until we tell it to stop. Then the condition is no longer met and we exit the loop. This will be very useful at many points in the code. In fact, the main loop in almost every game is made up of a while loop.
+
+
+Booleans
+
+We have already learned a few data types, such as integers, floating points, and strings (text). There is another type of data very commonly used in while loops, since they allow us to evaluate in a very simple way if a condition is fulfilled or not.
+
+This data type is called boolean, and it can only have two values: true or false. This data type helps us represent the truth of an expression, and helps us write Python code in an efficient and understandable way.
+
+Booleans are primarily used to get out of a loop. A variable with a boolean value will allow us to exit the loop simply by changing its value from "true" to "false" or vice versa.
+
+Example:
+
+
+
+
+
+In this case we have the boolean game_over, which will allow us to stop the while. We initialize it to “false”, just as we initialize numeric variables to 0.
+
+We have also created a variable that we will increment on each iteration of the loop, but if we run the code, we'll see that it never stops.
+
+If we want it to finish, we must set our boolean to “true” at some point, because the while will keep running if game_over is false. Let's say for example that we want the variable growing_number to reach 100 and then stop. We will create a condition for it and then we will change the value of game_over.
+
+
+
+
+
+Now we have made the loop stop when the variable growing_number reaches the value 100. We have set the boolean game_over to “true” and therefore the loop will not be able to continue, since it only must go on while game_over is false.
+
+Another very typical way of doing the same loop would be this:
+
+
+
+
+The result is the same: “not game_over” is the same as “game_over == False”.
+
+In video games there is typically a main while loop that is constantly running, until the game is over, either because we have run out of lives, or because time is up, or because we have won. So the boolean changes and the game ends, and we get a goodbye message like this:
+
+
+
+
+In the very common case that the loop is very long and we want to exit the game as soon as the game_over variable becomes True, the break statement will make us exit the loop immediately and prevent the loop from continuing to execute the rest of that iteration of the loop.
+
+So if our code were the following (absurd but useful to show that everything that comes after the end of the game should not appear on the screen):
+
+
+
+
+Then end of our result would be:
+
+
+
+So we should add the break sentence at the right point so that the last thing to appear on screen is the goodbye message:
+
+
+
+
+Which would give us the expected result:
+
+
+
+
+
+
+--- FIN DEL DOCUMENTO: 2425 - 3ESO - Basic Python IV - Loops II.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425 - Beginning with Python III_ Loops I.docx ---
+Loops
+
+Before we start doing graphics, the last thing we need to know is how to create loops, how to create code that gets repeated over and over again. We will need this in order to perform the same action many different times without having to needlessly copy and paste parts of our code.
+
+So we are going to check the following example that illustrates this situation. It is a little program that makes us guess the T&D mark of a student between 0 and 10:
+
+
+
+The first lines ran only once, but every time we make an attempt to guess the mark, it is the same piece of code which is being repeated all the time. These structures are very typical in many different parts of almost every application, so we need to be able to build them in an easy way that allows us to repeat certain parts of our code indefinitely.
+
+Loops are an essential part of every piece of code, and that is why we must learn about them so early. For example, in the case of a videogame, everytime there is a change on the screen it is part of a loop that is running indefinitely .
+
+The for loop
+
+So starting from the very beginning, let’s say we want to show something on the screen ten times in a row. Of course we know how to do that, and we could do something like this:
+
+
+
+We can very easily (and rudimentary) just copy it ten times and the result will of course be:
+
+
+
+But this is not efficient if we need to repeat an action (like checking the score of a player, or changing the graphics around the player) hundreds or thousands of times. That is what loops were designed for, so the only (sane) choice we actually have is to write the code like this:
+
+
+
+This piece of code has the same effect as the action of using print 10 times. 
+
+
+
+
+The for loop performs an action or a set of actions a certain number of times. The number of times it is repeated comes defined by the parameter between parenthesis in the function range(), and the x is a variable which keeps track of how many times the loop has been repeated. 
+
+The syntax of the for loop is very similar to the syntax of the if statement: they end with a colon and they both use indentation to determine which lines are within the statement. If we want lines to belong to the loop, then we need them to use the indentation, just the same as in the if case:
+
+
+
+The result of this code will be:
+
+
+
+But if we include the second sentence in the indentation, then it belongs to the loop and it gets repeated three times as well:
+
+
+
+
+Now we will take a look at the variable i, the one that gets increased everytime we repeat the loop. In the previous example, the parameter in the function range was 3, so the loop got repeated three times. At the beginning of the first execution, i had a value of zero, at the second execution it got a value of 1, and after the third one it got a value of 2. We can check that very easily by printing the value of i after every repetition of the loop:
+
+
+
+
+
+It is important that we notice that the first value of i will always be 0. Therefore, if we want to print (for example), every number from 1 to 10 we cannot do this:
+
+
+Because this is what we will get:
+
+
+So obviously if we want to print numbers from 1 to 10, we will have to do this:
+
+
+
+Other option we have for doing this would be to give two parameters to range(), where the first parameter indicates the first value i must take:
+
+
+
+The third parameter that we can use in the function range() is the increment parameter, which will tell the function how big the increment must be. Examples:
+
+
+
+
+
+Now that we have checked the basic options we have when using the particle for, let’s take a look at the possibility of including a loop within a loop, the so-called nesting loops. 
+
+Let’s try to guess what this code prints:
+
+
+We already know the answer to this one, which is:
+
+
+
+The following lines look almost the same, but throw actually a completely different result, because the second for is indented, which means it will be executed every repetition of the first for. We say that the second for is nested. So let’s try and guess what these two nesting for loops do:
+
+
+
+
+
+So every time we print a “Hello!”, the second for loop gets executed, and it runs three times. So for each “Hello!” that we print, we will also print three consecutive “Bye!”. So from now on, we will be able to execute loops inside loops, and that will make our lives so much easier when it comes to programming any kind of game.
+
+The usage of loops offers us endless possibilities, and we will see just a couple of basic examples of what can be done with them.
+
+This is for example the pattern digital clocks follow. They only need to repeatedly show the same set of hours and minutes over and over again. In Python we can do this with a very simple loop:
+
+
+
+And it will print all of the possible combinations we use for time during a day.
+
+The other example would be to maintain a running score. In essence it only adds every number that it receives, and this could be used for a score, for an average, for the outcome of a confrontation, etc. The code could be something like this:
+
+
+
+We already know very well what every line in this code does. First of all, we create a variable called resultado that will contain the sum of all the numbers the user will enter. Then, we create our for loop, that will ask five times the user to enter a number, and it will accumulate the sum of those numbers inside the variable resultado. Finally, it will show the user the total result of the addition of the five numbers.
+
+
+The second one would be just a demonstration of how easily we can perform mathematical operations with large amounts of numbers. For example, the sum of the first 100 numbers would be very easily programmed like this:
+
+
+
+
+
+
+
+
+
+
+--- FIN DEL DOCUMENTO: 2425 - Beginning with Python III_ Loops I.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425 - Beginning with Python II_ Conditional Statements.docx ---
+Conditional Statements
+
+We need our computer to be able to differentiate between many situations, and to take different courses of action depending on those situations. The way we have to do it in 
+programming is through the conditional statement, or if statement. 
+
+In the particular case of a videogame, the computer needs to know when a player has run out of lives, when a player is winning a fight or when a player is reaching a platform or falling to the ground. The conditional statements allow us to explain to the computer when to do anything, when to make decisions.
+
+The conditional statement in Python, as well as in many other programming languages and some actual languages, is expressed through the words if, else and elif.
+
+Let’s use the if statement a bit to check how it works. We will create an extremely simple program and use it in different ways:
+
+
+
+And now it’s time to start using conditional statements. We will need them, because we will choose different answers depending on the numbers entered by the user. So for lower values we will agree and make comments about the bad performance of Real Madrid, and for higher values we will be surprised and remark how poor the performance was. 
+
+We can do this by using the word if:
+
+
+This condition creates a response when the value entered by the user is lower than 5. So when we execute this program and we choose a value lower than 5, then we get that response:
+
+
+
+But what happens if we enter a value equal or higher than 5? We have not created any course of action for the program, so there will be no response:
+
+
+
+So we need to establish different reactions for every option, if we want our program to be consistent. We will need to consider every option, so in our case we will need to cover every possibility from 0 to 10. But before that, let’s talk a bit about indentation, which is extremely important in these kinds of statements.
+
+As you have seen before, once you enter the word if, the next line is automatically indented.So only the indented statements will belong to the if statement. Let’s add a sentence to our program so far:
+
+
+
+Every sentence is indented, so they belong to the if statement and therefore they will only be executed if the condition is met. Let’s check that by entering a value that does not meet the condition:
+
+
+
+So let’s see what happens if we don’t use the indentation. Then the sentence doesn’t belong to the if statement and it doesn’t depend on the condition, it will always be printed:
+
+
+
+
+
+So that is the reason why we must always be extremely careful with indentation: it will change the result of our code.
+
+Now we define more answers for the rest of options:
+
+
+
+
+Now we can check two things: the second if includes the value 5, because the operator used was “>=”. So that if will include 5 and every number higher than 5. More operators we can use:
+
+== → This is the operator for “equals”. If we use just one “=”, we will get an error because Python will think we are trying to assign a value.
+!= → This is the operator for “not equals”.
+
+But what we actually want is just values from 0 to 10, so we should actually send a different message if a value lower than zero or higher than 10 is entered, something like an error message.That means we also need to change our conditions, because now values have to be:
+
+Equal or higher than zero and lower than five.
+Equal or higher than five and equal or lower than ten.
+
+
+
+
+
+
+Now we just need another option for useless values (out of the range from 0 to 10). We do that with the keyword else. Else will take into account all the other options that are not defined in the previous if statement. If we want to include two or more if statements (which is our case, we have two), we have to use if for the first one and elif for the rest of if statements. They must not be indented:
+
+
+
+Now we have fixed the absence of error message, and this is what we get if we enter an invalid value:
+
+
+
+Let’s say that we want to include an extra message just for the values between 0 and 2. The rest of the code remains the same. We think that the computer will understand and we just create another elif:
+
+
+
+But when we enter a value between 0 and 2 the computer does not show our message:
+
+
+
+That happens because the computer does not look at the code as a whole. We assume it will take a look at the code, and it will say “Ok, for values between 0 and 2 the message must be clearly the one about “no hay que pasarse”. But the computer doesn’t do it like that, it executes the program line by line, and the first if already met the condition, so the computer doesn’t take into account the rest of options. So we have two options: either we put the most restrictive first, or we define more the limits of the variable opinion. 
+
+
+That is the first option. And the following picture is the second option, both of them have the same result.
+
+
+
+
+
+
+
+--- FIN DEL DOCUMENTO: 2425 - Beginning with Python II_ Conditional Statements.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425 - T&D 3ESO - Loopy Business II.docx ---
+Loopy Business II
+
+These are our loop exercises for today’s class. In all of them we need to be able to show on screen the combinations of numbers as shown in the pictures, and we must always do it by using nested loops.
+
+Exercise 1: 
+
+
+
+Exercise 2: 
+
+
+
+Exercise 3:
+
+
+
+
+
+
+Exercise 4:
+
+
+
+Exercise 5:
+
+
+
+
+
+
+
+
+--- FIN DEL DOCUMENTO: 2425 - T&D 3ESO - Loopy Business II.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425 - T&D 3ESO - Loopy Business.docx ---
+Exercises with loops
+Introduction: the function print() includes at the end of the printed characters a last character that makes the program go to the next line. So, if for example, we create a loop like this one:
+
+The program will produce the following result:
+
+
+So the way we have to print characters on the same row with loops is by adding a change at the end of the print sentence, which will look like this:
+
+This loop prints the letter x five times, like the previous one, but the second part we introduced prevents the print() function from going to the next line. So the result is the one we wanted:
+
+We will use this trick to print the following patterns we are going to practice with. So let’s go with the exercises:
+
+Exercise 1: Printing one line of 10 x, then another one of 15 x and then another one of 20. It has to be done with loops and it has to look like this
+
+
+Exercise 2: Printing a square of 5x5 by using again the letter x. It has to be done with nested loops and it has to look like this:
+
+Exercise 3: Printing a rectangle with 8 rows and 5 columns. It has to be with nested loops and it has to look like this:
+
+ 
+
+Exercise 4: Printing ten lines that count from 0 to 9. It has to be done with nested loops and it has to look like this:
+
+
+Exercise 5: Printing ten columns that count from 0 to 9. It has to be done with nested loops and it has to look like this:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--- FIN DEL DOCUMENTO: 2425 - T&D 3ESO - Loopy Business.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425 - Task about the While Loop.docx ---
+Basic Python IV - Exercises with the while loop
+
+
+Create a program that asks the user to enter a password with the phrase: "Enter the new password." Then, it should ask the user to repeat the password. If they match, it will display a message of satisfaction. If they do not match, it should ask for them again until they do match.
+
+Create a program that asks the user to enter a password with the phrase: "Enter the new password." Then, it should ask the user to repeat the password. If they match, it will display a message of satisfaction. If they do not match, it should ask for them again until they do match, with a maximum of 5 attempts. After those 5 attempts, if the same password has not been entered twice, it will display a message of disappointment.
+
+Create a program that repeatedly asks the user: "What is the best class in the whole school?" The program will only stop when the answer is 3ºA.
+
+Create a program that repeatedly asks the user: "What is the best class in the whole school?" The program will only stop when the answer is 3ºA. Additionally, before stopping, it will display a message of satisfaction.
+
+Create a program that simulates a piggy bank. The program should first ask for an amount of money that will be the goal, what we want to save. Then, the program will repeatedly ask for amounts that will be saved until the total saved equals or exceeds the goal. At that point, it will announce that we have saved the desired amount.
+
+Create a program that simulates a piggy bank. The program should first ask for an amount of money that will be the goal, what we want to save. Then, the program will repeatedly ask for amounts that will be saved until the total saved equals or exceeds the goal. At that point, it will announce that we have saved the desired amount. But now, it must display an error message if the amounts entered are not positive numbers.
+
+
+
+--- FIN DEL DOCUMENTO: 2425 - Task about the While Loop.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425- Another Task about the While Loop.docx ---
+Basic Python IV - Exercises with the while loop
+
+
+Create a program that asks the user to enter numbers one by one and adds them up. The program will stop when the total is 100 or more. It will then print how many numbers were entered and the total sum.
+
+total = 0
+count = 0
+while total < 100:
+    number = int(input("Enter a number: "))
+    total += number
+    count += 1
+print("You entered", count, "numbers. Total:", total)
+
+Create a program that chooses a secret number (for example, 7). The user has to guess the number. The program will ask repeatedly until the user guesses correctly. Then it will print a message and the number of attempts.
+
+secret = 7
+tries = 0
+while True:
+    guess = int(input("Guess the number (1-10): "))
+    tries += 1
+    if guess == secret:
+        print("Correct! You guessed it in", tries, "tries.")
+        break
+
+Create a program that keeps asking the user: 'Do you want to continue? (yes/no)' The program stops when the answer is 'no', and then prints a goodbye message.
+
+while True:
+    answer = input("Do you want to continue? (yes/no): ")
+    if answer == "no":
+        print("Goodbye!")
+        break
+
+Create a program that asks the user for a positive number. Then it will count from 1 to that number and print each number.
+
+limit = int(input("Enter a positive number: "))
+i = 1
+while i <= limit:
+    print(i)
+    i += 1
+
+Create a program that asks the user for temperatures in degrees. The user can enter as many as they want. Entering 999 will stop the program. At the end, it will print the highest and lowest temperatures. If a temperature is lower than -100 or higher than 100, it should show an error and skip it.
+
+highest = -100
+lowest = 100
+while True:
+    temp = float(input("Enter temperature (999 to stop): "))
+    if temp == 999:
+        break
+    if temp < -100 or temp > 100:
+        print("Invalid temperature")
+        continue
+    if temp > highest:
+        highest = temp
+    if temp < lowest:
+        lowest = temp
+print("Highest:", highest, "Lowest:", lowest)
+
+
+--- FIN DEL DOCUMENTO: 2425- Another Task about the While Loop.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425- Beginning with Python II_ Conditional Statements.docx ---
+Conditional Statements
+
+We need our computer to be able to differentiate between many situations, and to take different courses of action depending on those situations. The way we have to do it in 
+programming is through the conditional statement, or if statement. 
+
+In the particular case of a videogame, the computer needs to know when a player has run out of lives, when a player is winning a fight or when a player is reaching a platform or falling to the ground. The conditional statements allow us to explain to the computer when to do anything, when to make decisions.
+
+The conditional statement in Python, as well as in many other programming languages and some actual languages, is expressed through the words if, else and elif.
+
+Let’s use the if statement a bit to check how it works. We will create an extremely simple program and use it in different ways:
+
+
+
+And now it’s time to start using conditional statements. We will need them, because we will choose different answers depending on the numbers entered by the user. So for lower values we will agree and make comments about the bad performance of Real Madrid, and for higher values we will be surprised and remark how poor the performance was. 
+
+We can do this by using the word if:
+
+
+This condition creates a response when the value entered by the user is lower than 5. So when we execute this program and we choose a value lower than 5, then we get that response:
+
+
+
+But what happens if we enter a value equal or higher than 5? We have not created any course of action for the program, so there will be no response:
+
+
+
+So we need to establish different reactions for every option, if we want our program to be consistent. We will need to consider every option, so in our case we will need to cover every possibility from 0 to 10. But before that, let’s talk a bit about indentation, which is extremely important in these kinds of statements.
+
+As you have seen before, once you enter the word if, the next line is automatically indented.So only the indented statements will belong to the if statement. Let’s add a sentence to our program so far:
+
+
+
+Every sentence is indented, so they belong to the if statement and therefore they will only be executed if the condition is met. Let’s check that by entering a value that does not meet the condition:
+
+
+
+So let’s see what happens if we don’t use the indentation. Then the sentence doesn’t belong to the if statement and it doesn’t depend on the condition, it will always be printed:
+
+
+
+
+
+So that is the reason why we must always be extremely careful with indentation: it will change the result of our code.
+
+Now we define more answers for the rest of options:
+
+
+
+
+Now we can check two things: the second if includes the value 5, because the operator used was “>=”. So that if will include 5 and every number higher than 5. More operators we can use:
+
+== → This is the operator for “equals”. If we use just one “=”, we will get an error because Python will think we are trying to assign a value.
+!= → This is the operator for “not equals”.
+
+But what we actually want is just values from 0 to 10, so we should actually send a different message if a value lower than zero or higher than 10 is entered, something like an error message.That means we also need to change our conditions, because now values have to be:
+
+Equal or higher than zero and lower than five.
+Equal or higher than five and equal or lower than ten.
+
+
+
+
+
+
+Now we just need another option for useless values (out of the range from 0 to 10). We do that with the keyword else. Else will take into account all the other options that are not defined in the previous if statement. If we want to include two or more if statements (which is our case, we have two), we have to use if for the first one and elif for the rest of if statements. They must not be indented:
+
+
+
+Now we have fixed the absence of error message, and this is what we get if we enter an invalid value:
+
+
+
+Let’s say that we want to include an extra message just for the values between 0 and 2. The rest of the code remains the same. We think that the computer will understand and we just create another elif:
+
+
+
+But when we enter a value between 0 and 2 the computer does not show our message:
+
+
+
+That happens because the computer does not look at the code as a whole. We assume it will take a look at the code, and it will say “Ok, for values between 0 and 2 the message must be clearly the one about “no hay que pasarse”. But the computer doesn’t do it like that, it executes the program line by line, and the first if already met the condition, so the computer doesn’t take into account the rest of options. So we have two options: either we put the most restrictive first, or we define more the limits of the variable opinion. 
+
+
+That is the first option. And the following picture is the second option, both of them have the same result.
+
+
+
+
+
+
+
+--- FIN DEL DOCUMENTO: 2425- Beginning with Python II_ Conditional Statements.docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2425- Task about the While Loop (Solved).docx ---
+Basic Python IV - Exercises with the while loop
+
+
+Create a program that asks the user to enter a password with the phrase: "Enter the new password." Then, it should ask the user to repeat the password. If they match, it will display a message of satisfaction. If they do not match, it should ask for them again until they do match.
+
+
+
+Create a program that asks the user to enter a password with the phrase: "Enter the new password." Then, it should ask the user to repeat the password. If they match, it will display a message of satisfaction. If they do not match, it should ask for them again until they do match, with a maximum of 5 attempts. After those 5 attempts, if the same password has not been entered twice, it will display a message of disappointment.
+
+
+Create a program that repeatedly asks the user: "What is the best class in the whole school?" The program will only stop when the answer is 3ºA. Additionally, before stopping, it will display a message of satisfaction.
+
+
+
+Create a program that simulates a piggy bank. The program should first ask for an amount of money that will be the goal, what we want to save. Then, the program will repeatedly ask for amounts that will be saved until the total saved equals or exceeds the goal. At that point, it will announce that we have saved the desired amount.
+
+
+
+
+Create a program that simulates a piggy bank. The program should first ask for an amount of money that will be the goal, what we want to save. Then, the program will repeatedly ask for amounts that will be saved until the total saved equals or exceeds the goal. At that point, it will announce that we have saved the desired amount. But now, it must display an error message if the amounts entered are not positive numbers.
+
+
+
+--- FIN DEL DOCUMENTO: 2425- Task about the While Loop (Solved).docx ---
+
+
+--- INICIO DEL DOCUMENTO: 2526 - Beginning with Python I_ Variables and Assignments (1).docx ---
+Intro - What is Programming?
+
+Today we will begin with something completely new to most of you: learning how to talk to a computer. There are many different programming languages, but the one we will use is called Python.
+
+Computers are everywhere: inside your phone, your video games, your smart TV, your tablet, your car, and even inside everyday objects like smartwatches, washing machines, or Bluetooth speakers. All of them follow instructions written by programmers. Those instructions are called programs, and the activity of creating them is called programming.
+
+The reason why we need programming is simple: computers are extremely fast and powerful, but they cannot think by themselves. They only do exactly what we tell them to do. Programming is the way we communicate with them: we write clear, precise instructions in a language they can understand.
+
+With programming, we can create:
+
+Apps: every app you use (WhatsApp, Instagram, YouTube, Spotify…) works thanks to thousands of lines of code.
+Artificial Intelligence: This is where Python plays a leading role. Most modern AI systems (image recognition, chatbots, translation tools, recommendation systems like those used by Netflix or Spotify, self-driving cars and scientific research) are built using Python.
+Videogames: from Minecraft to Fortnite to the simplest mobile games, programming decides how characters move, how physics behaves, how enemies act, and how scoring works.
+Webpages and online services: online shops like Amazon, news websites Marca or El País, streaming services like Netflix… all of them run on code.
+Robots and smart devices: smart TVs connected to the Internet, robots in factories, robots that vacuum your house, drones or voice assistants like Alexa respond to programmed instructions.
+Science, medicine and industry: Internet searches, weather prediction, medical imaging, simulations, data analysis—everything relies on programming.
+
+No matter what area you look at, programming is the invisible force that makes technology work.
+
+But how exactly do we give instructions to a computer? A program is simply a set of ordered instructions. The computer reads them line by line, from top to bottom, exactly as you write them. Computers cannot guess or interpret what we “meant”, they need us to be very clear, step by step.
+
+For example, if you wanted a robot to prepare a sandwich, you could not just say: “Make a sandwich.” You would need to specify:
+
+Take two slices of bread.
+Open the jar of jam.
+Use a knife to spread jam on one slice.
+Put the slices together.
+Serve on a plate.
+
+Programming is exactly this: breaking tasks into small, precise steps.
+
+Python is one of the most popular programming languages in the world because:
+
+It is simple to read and write.
+Professionals use it in AI, videogames, web development, science and engineering.
+It is perfect for beginners but powerful for experts.
+
+In this document we will write our very first Python program, learn how the computer shows results on the screen, and begin to understand the connection between what we type and what the machine does.
+
+Everything we will learn next in the document (how to print text, how to use variables, how to do calculations) is part of this new language that lets you command the computer.
+
+Variables and Assignments
+
+
+In this little task we are going to start with the basics of every programming language. We will use the extension Python Playground and we will start editing our own first program. We will edit and modify our program using the Editor Window (above), and we will check the output of our program on the Shell Window (below).
+
+So once we click on the Python Playground icon we can start writing code. In this case we will start with the most basic function of Python, which is the print function and is used for writing text on screen (on the Shell Window). So we will write down the line we see in the picture (or any other line for that matter):
+
+
+
+As we can see, this function and any other function needs the parameters to be inside the parenthesis right after the name of the function. In this case, we are printing a string of characters, and they need to be between the symbols “”, because otherwise the function will interpret it as mathematical data and we will get an error. Once we run the program, the result on the Shell Window will be this:
+
+
+
+The use of the parenthesis is analogous to the one in mathematical functions, we use it to include the information the command needs. In math we will see the functions usually represented as something like f(x). 
+
+In this case print is the name of our function, and the parameter it needs is the string of characters “Este es mi primer programa”. In math the parameters of the functions are usually numbers, but in programming they can be many different things: numbers, text, positions… we will also have functions with many parameters, which will be located within the parenthesis separated by commas.
+
+We go back to the line of text we have already written, we copy it and we paste it on the next line, so that we have two identical program lines.
+
+
+
+When we run the program, we see the result is, of course, two identical lines with the same text. As obvious as this is, it shows us the sequential nature of a program: every line gets executed after the previous one, and it will always follow that order. 
+
+
+
+In order to go deeper into this, we are going to print now “100+100”, and the result will be the one we are expecting.
+
+
+
+
+
+Python is just printing on screen the characters we are telling it to print. This happens because we are entering the characters between the quotation marks, but what happens if we don’t use them for this operation?
+
+
+
+
+
+
+Now this is different: as soon as the quotation marks disappeared, Python interpreted the parameters as a mathematical operation, and it executed it. This way we can notice the difference between strings and numbers, between printing text and printing the output of a mathematical function.
+
+So we are going to see how we can concatenate two different parameters within the same function print. If we want to express the output of the operation and explain it, it is best if we print a sentence like: “El resultado de 100+100 es 200”, but how can we do that if we want to include the operation?
+
+
+
+
+
+So the solution is to separate them with a comma, and to put between quotation marks only the string that we want to be printed out just the way it is:
+
+
+
+
+
+This will be extremely useful when we start using variables, because we will be able to print the result of any operation we can imagine.
+
+Finally, what happens if we take out the quotation marks to a string of characters? The editor window will show us an error message, warning us about the misuse of the function print: if there are no quotation marks, Python expects a mathematical command, not a sentence.
+
+
+
+
+
+The assignment operation
+
+Our programs (in our case, our videogames) will need to be able to store information, lots of different kinds of information: numbers of remaining lives, how strong or fast our opponents are, the highest score, etc. 
+
+In order to store all this information we use what we call variables. A variable is like a box where you can store information. On the box, you put a label (the name of the variable), and inside the box, you put a value (a number, a word, etc.).
+
+Variables are, therefore, named memory locations that store a value which can be changed during the execution of a program. You already know that within an equation or a function in mathematics we use variables too, which are usually represented by letters (x, y, z, …). 
+
+If we want to create a variable in Python (and in any programming language) we just need to give it a name (in this case, “x”), use the assignment operator “=” (which is slightly different to its use in math) and finally the value we want to assign it.
+
+The syntax of the language makes it necessary that at the left of the assignment operator there is only the variable, and at the right side any mathematical operation. Python will execute the expression and assign it to the variable.
+
+So from the moment that line of code is written, that variable will take that value. We can check it using the print function again. Let’s say we assign the value 100 to the variable x, and then we print the value of the variable onscreen:. 
+
+
+
+The result on the shell window will be the value of the variable x, without any mention to its name:
+
+
+
+Of course, if we decide to put x between quotation marks that is precisely what we will get onscreen:
+
+
+
+
+
+If we wanted to print the fact that x has that value, then we would do it again as before:
+
+
+
+
+
+As for the difference between the “=” in programming and in Mathematics (where it involves equality), we can see it clearly in the following expression, which makes no sense in math, but is extremely common in coding:
+
+
+
+Of course, x = x+1 is impossible in Mathematics, but in programming we are just increasing the value of x in one unit, as we can see if we execute the program:
+
+
+
+There are other assignment operators, such as “+=”, which causes the same effect: 
+
+
+
+
+
+
+The functions print(), input(), int() and float()
+
+Up to now we have used the function print() to show information on the screen. This function is essential, because it allows our program to communicate with us.
+
+The syntax is always the same: the word print, followed by something between parentheses. Inside the parentheses we place what we want Python to show:
+
+A string (text inside quotation marks)
+A number
+A variable
+Or a combination of all of them separated by commas
+
+Examples:
+
+
+
+
+
+
+The function print() always sends information from the program to the user.
+
+If print() sends information to the user, input() does the opposite: it asks the user for information, waits for the keyboard input, and stores it into a variable.
+
+Its syntax is also simple: the name of the variable, the assignment operator “=”, then input and, between the parentheses, the message that the user will see, with what we want the user to type.
+
+
+
+When we run this program, Python Playground will open a pop-up showing the user what we want:
+
+
+
+The user writes something (for example: Enrique), and the variable name stores that text.
+
+
+
+Very important: input() always returns text, even if the user types a number. Python considers everything that comes from the keyboard as text, because it is the most common type it will get.
+
+Therefore, If we plan to do mathematical operations, we must convert that text to a number.
+
+In order to achieve that, we will use the functions int() and float().
+
+Because input() always returns a string, Python would interpret "5" as text, not as the number 5.
+If we try to calculate "5" + 10, the program will give us an error.
+
+
+
+That’s why we need int() and float(). Int() converts text into an integer (a whole number), and float() converts text into a decimal number.
+
+Once the input has been converted into a number, we can operate with it normally.
+
+Let’s check it with a simple example: a program that multiplies two given numbers.  
+
+
+
+
+
+--- FIN DEL DOCUMENTO: 2526 - Beginning with Python I_ Variables and Assignments (1).docx ---
