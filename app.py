@@ -139,24 +139,45 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+
 # --- 6. INTERACCIÓN ---
 if prompt := st.chat_input("Escribe tu duda..."):
+    # A) Guardar y mostrar mensaje del usuario
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
+    # B) Intentar obtener respuesta (Con sistema de paciencia)
     try:
-        with st.spinner(f"Pensando con {selected_model}..."):
+        with st.spinner("Pensando..."):
+            # INTENTO 1: Enviamos el mensaje
             response = st.session_state.chat_session.send_message(prompt)
             bot_reply = response.text
             
-        with st.chat_message("assistant"):
-            st.markdown(bot_reply)
-        st.session_state.messages.append({"role": "assistant", "content": bot_reply})
-        
     except Exception as e:
-        st.error(f"Error de conexión (Intenta cambiar el modelo en la barra izquierda): {e}")
+        # Si falla, miramos si es por saturación (Error 429)
+        if "429" in str(e):
+            with st.chat_message("assistant"):
+                st.warning("🚦 Google está saturado. Esperando 5 segundos para reintentar...")
+                time.sleep(5) # Esperamos 5 segundos
+                try:
+                    # INTENTO 2: Reintentamos automáticamente
+                    response = st.session_state.chat_session.send_message(prompt)
+                    bot_reply = response.text
+                except Exception as e2:
+                    st.error("❌ Imposible conectar tras reintentar. Prueba en 1 minuto.")
+                    st.stop() # Paramos aquí
+        else:
+            # Si es otro error (como que se cayó internet), avisamos
+            st.error(f"Error de conexión: {e}")
+            if "client has been closed" in str(e).lower():
+                st.warning("⚠️ Recarga la página (F5).")
+            st.stop()
 
+    # C) Si todo ha ido bien (en el intento 1 o 2), mostramos la respuesta
+    with st.chat_message("assistant"):
+        st.markdown(bot_reply)
+    st.session_state.messages.append({"role": "ass
 
 
 
