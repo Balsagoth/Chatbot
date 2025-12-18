@@ -30,28 +30,21 @@ client = get_client(api_key)
 # 🔍 ZONA DE DIAGNÓSTICO (SOLO PARA EL PROFE)
 # ==========================================
 with st.sidebar:
-    st.header("🔧 Diagnóstico de Modelos")
-    st.write("Si da error 404, prueba con uno de estos nombres:")
+    st.header("⚙️ Configuración")
     
-    try:
-        # Pedimos a Google la lista de modelos disponibles HOY
-        # Iteramos sobre los modelos y filtramos los que generan contenido
-        models = client.models.list() 
-        valid_models = []
-        for m in models:
-            # Buscamos modelos que sirvan para 'generateContent'
-            # Nota: la estructura del objeto puede variar, imprimimos el nombre directo
-            name = m.name.split("/")[-1] # Quitamos el "models/" del principio
-            if "gemini" in name and "vision" not in name: # Filtro básico
-                valid_models.append(name)
-        
-        # Mostramos la lista para que puedas copiar
-        selected_model = st.selectbox("Modelos detectados:", valid_models, index=0 if valid_models else None)
-        st.caption(f"Usando ahora: `{selected_model}`")
-        
-    except Exception as e:
-        st.error(f"No se pudo listar modelos: {e}")
-        selected_model = "gemini-1.5-flash" # Fallback por defecto
+    # EN LUGAR DE BUSCAR, PONEMOS LA LISTA MANUALMENTE
+    # Esto asegura que siempre tengas la opción correcta disponible
+    mis_modelos = [
+        "gemini-1.5-flash",      # EL RECOMENDADO (Rápido, estable, buen límite gratis)
+        "gemini-2.0-flash-exp",  # El nuevo (Muy potente, pero se satura rápido)
+        "gemini-1.5-pro"         # El "cerebrito" (Más lento, mejor razonamiento)
+    ]
+    
+    st.write("Selecciona el 'cerebro' de la IA:")
+    selected_model = st.selectbox("Modelo:", mis_modelos, index=0)
+    
+    st.info(f"✅ Usando: `{selected_model}`")
+    st.caption("Nota: Si recibes error 429, vuelve a 'gemini-1.5-flash'.")
 
 # ==========================================
 
@@ -179,6 +172,7 @@ if prompt := st.chat_input("Escribe tu duda..."):
     with st.chat_message("assistant"):
         st.markdown(bot_reply)
     st.session_state.messages.append({"role": "ass
+
 
 
 
