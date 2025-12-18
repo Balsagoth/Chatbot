@@ -15,9 +15,15 @@ except:
 if not api_key:
     st.error("⚠️ No se ha encontrado la API Key. Configura 'GOOGLE_API_KEY'.")
     st.stop()
+# --- AQUÍ ESTÁ EL TRUCO: CACHE_RESOURCE ---
+# Usamos este decorador para que el cliente NO se cierre al recargar la página
+@st.cache_resource
+def get_client(api_key):
+    return genai.Client(api_key=api_key)
 
-# Cliente Oficial
-client = genai.Client(api_key=api_key)
+# En lugar de crear el cliente directamente, llamamos a la función cacheada
+client = get_client(api_key)
+
 
 # ==========================================
 # 🔍 ZONA DE DIAGNÓSTICO (SOLO PARA EL PROFE)
@@ -150,5 +156,6 @@ if prompt := st.chat_input("Escribe tu duda..."):
         
     except Exception as e:
         st.error(f"Error de conexión (Intenta cambiar el modelo en la barra izquierda): {e}")
+
 
 
