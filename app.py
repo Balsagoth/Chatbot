@@ -17,7 +17,6 @@ if not api_key:
     st.error("⚠️ No se ha encontrado la API Key. Configura 'GOOGLE_API_KEY'.")
     st.stop()
 
-# Cache del cliente para estabilidad
 @st.cache_resource
 def get_client(api_key):
     return genai.Client(api_key=api_key)
@@ -25,22 +24,41 @@ def get_client(api_key):
 client = get_client(api_key)
 
 # ==========================================
-# 🔍 BARRA LATERAL (SELECTOR DE MODELOS)
+# 🔍 DETECTOR AUTOMÁTICO DE MODELOS (ANTÍDOTO PARA EL ERROR 404)
 # ==========================================
+@st.cache_data(ttl=3600) # Guardamos la lista 1 hora para no ralentizar
+def get_valid_models(_client):
+    try:
+        # Preguntamos a la API qué modelos hay REALMENTE disponibles
+        models = _client.models.list()
+        valid_list = []
+        for m in models:
+            # Filtramos solo los que sirven para chatear
+            if "generateContent" in m.supported_generation_methods:
+                # Limpiamos el nombre (quitamos 'models/')
+                name = m.name.replace("models/", "")
+                # Filtramos modelos de visión pura o embeddings que no nos sirven
+                if "gemini" in name and "embedding" not in name:
+                    valid_list.append(name)
+        return valid_list
+    except Exception as e:
+        # Si falla la detección, usamos una lista de seguridad
+        return ["gemini-1.5-flash", "gemini-1.5-flash-001", "gemini-1.5-pro"]
+
 with st.sidebar:
     st.header("⚙️ Configuración")
     
-    # Lista de modelos robustos (usamos versiones específicas para evitar 404)
-    mis_modelos = [
-        "gemini-1.5-flash-002",  # Versión más estable actual
-        "gemini-1.5-flash",      # Alias genérico
-        "gemini-1.5-flash-8b",   # Versión ligera (menos saturación)
-        "gemini-2.0-flash-exp"   # Experimental (Cuidado con los límites)
-    ]
+    # Obtenemos la lista REAL disponible para tu cuenta
+    with st.spinner("Detectando modelos disponibles..."):
+        modelos_disponibles = get_valid_models(client)
     
-    selected_model = st.selectbox("Modelo:", mis_modelos, index=0)
+    # Si la lista está vacía por error, forzamos el básico
+    if not modelos_disponibles:
+        modelos_disponibles = ["gemini-1.5-flash"]
+
+    st.write("Selecciona un modelo de la lista (son los que tu cuenta permite):")
+    selected_model = st.selectbox("Modelo:", modelos_disponibles, index=0)
     
-    # Botón de pánico para limpiar memoria
     if st.button("🗑️ Reiniciar Chat", type="primary"):
         st.session_state.messages = []
         if "chat_session" in st.session_state:
@@ -61,7 +79,7 @@ def load_context():
 
 context_text = load_context()
 
-# --- 3. TU SYSTEM PROMPT (EXACTO) ---
+# --- 3. TU SYSTEM PROMPT EXACTO ---
 SYSTEM_PROMPT = f"""
 ROL:
 Eres el "Tutor IA", un asistente docente experto en Python y pedagogía para alumnos de Secundaria/Bachillerato.
@@ -111,7 +129,6 @@ Tutor (BIEN): "Para sumar usamos un operador matemático, igual que en clase de 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Detectar cambio de modelo y reiniciar si es necesario
 if "current_model" not in st.session_state:
     st.session_state.current_model = selected_model
 
@@ -120,14 +137,13 @@ if st.session_state.current_model != selected_model:
     if "chat_session" in st.session_state:
         del st.session_state.chat_session 
 
-# Crear Chat con el prompt
 if "chat_session" not in st.session_state:
     try:
         st.session_state.chat_session = client.chats.create(
             model=selected_model, 
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
-                temperature=0.7 # Creatividad controlada
+                temperature=0.7 
             )
         )
     except Exception as e:
@@ -142,19 +158,16 @@ for message in st.session_state.messages:
 
 # --- 6. INTERACCIÓN (CON REINTENTOS) ---
 if prompt := st.chat_input("Escribe tu duda..."):
-    # Guardar usuario
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Intentar responder (Manejo de errores 429 y 404)
     try:
         with st.spinner(f"Pensando con {selected_model}..."):
             response = st.session_state.chat_session.send_message(prompt)
             bot_reply = response.text
             
     except Exception as e:
-        # Si falla por saturación o límites
         if "429" in str(e) or "RESOURCE" in str(e):
             with st.chat_message("assistant"):
                 st.warning("🚦 IA saturada. Reintentando en 3 seg...")
@@ -163,13 +176,12 @@ if prompt := st.chat_input("Escribe tu duda..."):
                     response = st.session_state.chat_session.send_message(prompt)
                     bot_reply = response.text
                 except:
-                    st.error("❌ La IA está muy ocupada o has gastado tu cuota diaria. Prueba a cambiar el modelo en la izquierda.")
+                    st.error("❌ La IA está ocupada. Prueba a cambiar el modelo en la izquierda.")
                     st.stop()
         else:
             st.error(f"Error técnico: {e}")
             st.stop()
 
-    # Mostrar respuesta
     with st.chat_message("assistant"):
         st.markdown(bot_reply)
     st.session_state.messages.append({"role": "assistant", "content": bot_reply})
