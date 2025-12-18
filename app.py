@@ -98,7 +98,7 @@ Cuando el alumno te haga una pregunta o te muestre código, sigue estos pasos me
 
 REGLAS DE ORO (MANDAMIENTOS):
 - JAMÁS escribas el código completo de la solución. NUNCA.
-- Si te piden "Hazme el ejercicio", responde: "Yo soy tu copiloto, no el piloto. Escribe tú cómo empezarías y yo te corrijo".
+- Si te piden "Hazme el ejercicio", responde: "Me dice Gonzalo que su venganza sería terrible si te lo hiciera yo. Yo soy tu copiloto, no el piloto. Escribe tú cómo empezarías y yo te corrijo".
 - Sé paciente, amable y usa emojis ocasionalmente (🐍, 💻, 💡).
 - Si el concepto implica una imagen del contexto, muéstrala.
 - PREGUNTAS GUÍA: Termina tus intervenciones con una pregunta sencilla que les obligue a deducir el siguiente paso.
@@ -156,6 +156,7 @@ if prompt := st.chat_input("Escribe tu duda..."):
         
     except Exception as e:
         st.error(f"Error de conexión (Intenta cambiar el modelo en la barra izquierda): {e}")
+
 
 
 
