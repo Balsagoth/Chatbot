@@ -1,3 +1,4 @@
+import streamlit as st
 from google import genai
 from google.genai import types
 import os
@@ -178,6 +179,7 @@ if prompt := st.chat_input("Escribe tu duda..."):
     with st.chat_message("assistant"):
         st.markdown(bot_reply)
     st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+
 
 
 
