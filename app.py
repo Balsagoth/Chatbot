@@ -168,10 +168,11 @@ if prompt := st.chat_input("Escribe tu duda..."):
                 st.warning("⚠️ Recarga la página (F5).")
             st.stop()
 
-    # C) Si todo ha ido bien (en el intento 1 o 2), mostramos la respuesta
+    # C) Mostrar respuesta si todo fue bien
     with st.chat_message("assistant"):
         st.markdown(bot_reply)
-    st.session_state.messages.append({"role": "ass
+    st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+
 
 
 
