@@ -2,7 +2,7 @@ import streamlit as st
 from google import genai
 from google.genai import types
 import os
-import time 
+import time
 
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Tutor Python IA", page_icon="🐍", layout="centered")
@@ -16,42 +16,36 @@ except:
 if not api_key:
     st.error("⚠️ No se ha encontrado la API Key. Configura 'GOOGLE_API_KEY'.")
     st.stop()
-# --- AQUÍ ESTÁ EL TRUCO: CACHE_RESOURCE ---
-# Usamos este decorador para que el cliente NO se cierre al recargar la página
+
+# Cache del cliente para estabilidad
 @st.cache_resource
 def get_client(api_key):
     return genai.Client(api_key=api_key)
 
-# En lugar de crear el cliente directamente, llamamos a la función cacheada
 client = get_client(api_key)
 
-
 # ==========================================
-# 🔍 ZONA DE DIAGNÓSTICO (SOLO PARA EL PROFE)
+# 🔍 BARRA LATERAL (SELECTOR DE MODELOS)
 # ==========================================
 with st.sidebar:
-    st.header("🔧 Diagnóstico de Modelos")
-    st.write("Si da error 404, prueba con uno de estos nombres:")
-
-    try:
-        # Pedimos a Google la lista de modelos disponibles HOY
-        # Iteramos sobre los modelos y filtramos los que generan contenido
-        models = client.models.list() 
-        valid_models = []
-        for m in models:
-            # Buscamos modelos que sirvan para 'generateContent'
-            # Nota: la estructura del objeto puede variar, imprimimos el nombre directo
-            name = m.name.split("/")[-1] # Quitamos el "models/" del principio
-            if "gemini" in name and "vision" not in name: # Filtro básico
-                valid_models.append(name)
-
-        # Mostramos la lista para que puedas copiar
-        selected_model = st.selectbox("Modelos detectados:", valid_models, index=0 if valid_models else None)
-        st.caption(f"Usando ahora: `{selected_model}`")
-
-    except Exception as e:
-        st.error(f"No se pudo listar modelos: {e}")
-        selected_model = "gemini-1.5-flash" # Fallback por defecto
+    st.header("⚙️ Configuración")
+    
+    # Lista de modelos robustos (usamos versiones específicas para evitar 404)
+    mis_modelos = [
+        "gemini-1.5-flash-002",  # Versión más estable actual
+        "gemini-1.5-flash",      # Alias genérico
+        "gemini-1.5-flash-8b",   # Versión ligera (menos saturación)
+        "gemini-2.0-flash-exp"   # Experimental (Cuidado con los límites)
+    ]
+    
+    selected_model = st.selectbox("Modelo:", mis_modelos, index=0)
+    
+    # Botón de pánico para limpiar memoria
+    if st.button("🗑️ Reiniciar Chat", type="primary"):
+        st.session_state.messages = []
+        if "chat_session" in st.session_state:
+            del st.session_state.chat_session
+        st.rerun()
 
 # ==========================================
 
@@ -67,8 +61,7 @@ def load_context():
 
 context_text = load_context()
 
-# --- 3. DEFINICIÓN DE LA PERSONALIDAD ---
-# --- 3. DEFINICIÓN DE LA PERSONALIDAD (CEREBRO DEL PROFESOR) ---
+# --- 3. TU SYSTEM PROMPT (EXACTO) ---
 SYSTEM_PROMPT = f"""
 ROL:
 Eres el "Tutor IA", un asistente docente experto en Python y pedagogía para alumnos de Secundaria/Bachillerato.
@@ -112,26 +105,33 @@ Tutor (BIEN): "¡Casi lo tienes! Mira bien la línea del 'while'. En Python, ¿q
 
 Alumno: "¿Cómo sumo dos variables?"
 Tutor (BIEN): "Para sumar usamos un operador matemático, igual que en clase de mates. Si tienes 'a' y 'b', ¿cómo lo escribirías en papel? Intenta escribir el código tú mismo aquí."
-
 """
 
 # --- 4. GESTIÓN DE LA SESIÓN ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Configuración del chat usando el modelo seleccionado en la barra lateral
-if "chat_session" not in st.session_state or st.session_state.current_model != selected_model:
+# Detectar cambio de modelo y reiniciar si es necesario
+if "current_model" not in st.session_state:
     st.session_state.current_model = selected_model
+
+if st.session_state.current_model != selected_model:
+    st.session_state.current_model = selected_model
+    if "chat_session" in st.session_state:
+        del st.session_state.chat_session 
+
+# Crear Chat con el prompt
+if "chat_session" not in st.session_state:
     try:
         st.session_state.chat_session = client.chats.create(
             model=selected_model, 
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
-                temperature=0.7
+                temperature=0.7 # Creatividad controlada
             )
         )
     except Exception as e:
-        st.error(f"Error al iniciar chat con {selected_model}: {e}")
+        st.error(f"Error al iniciar con {selected_model}: {e}")
 
 # --- 5. INTERFAZ GRÁFICA ---
 st.title("🐍 Tutor de Python")
@@ -140,52 +140,36 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-
-# --- 6. INTERACCIÓN ---
+# --- 6. INTERACCIÓN (CON REINTENTOS) ---
 if prompt := st.chat_input("Escribe tu duda..."):
-    # A) Guardar y mostrar mensaje del usuario
+    # Guardar usuario
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # B) Intentar obtener respuesta (Con sistema de paciencia)
+    # Intentar responder (Manejo de errores 429 y 404)
     try:
-        with st.spinner("Pensando..."):
-            # INTENTO 1: Enviamos el mensaje
+        with st.spinner(f"Pensando con {selected_model}..."):
             response = st.session_state.chat_session.send_message(prompt)
             bot_reply = response.text
-
+            
     except Exception as e:
-        # Si falla, miramos si es por saturación (Error 429)
-        if "429" in str(e):
+        # Si falla por saturación o límites
+        if "429" in str(e) or "RESOURCE" in str(e):
             with st.chat_message("assistant"):
-                st.warning("🚦 Google está saturado. Esperando 5 segundos para reintentar...")
-                time.sleep(5) # Esperamos 5 segundos
+                st.warning("🚦 IA saturada. Reintentando en 3 seg...")
+                time.sleep(3)
                 try:
-                    # INTENTO 2: Reintentamos automáticamente
                     response = st.session_state.chat_session.send_message(prompt)
                     bot_reply = response.text
-                except Exception as e2:
-                    st.error("❌ Imposible conectar tras reintentar. Prueba en 1 minuto.")
-                    st.stop() # Paramos aquí
+                except:
+                    st.error("❌ La IA está muy ocupada o has gastado tu cuota diaria. Prueba a cambiar el modelo en la izquierda.")
+                    st.stop()
         else:
-            # Si es otro error (como que se cayó internet), avisamos
-            st.error(f"Error de conexión: {e}")
-            if "client has been closed" in str(e).lower():
-                st.warning("⚠️ Recarga la página (F5).")
+            st.error(f"Error técnico: {e}")
             st.stop()
 
-    # C) Si todo ha ido bien (en el intento 1 o 2), mostramos la respuesta
+    # Mostrar respuesta
     with st.chat_message("assistant"):
         st.markdown(bot_reply)
     st.session_state.messages.append({"role": "assistant", "content": bot_reply})
-
-
-
-
-
-
-
-
-
-
